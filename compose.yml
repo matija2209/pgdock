@@ -1,0 +1,29 @@
+services:
+  exercise-db:
+    image: postgres:17
+    container_name: exercise-db
+    environment:
+      POSTGRES_USER: exercise_admin
+      POSTGRES_PASSWORD: Ex3rc1seP@ss
+      POSTGRES_DB: exercise
+    ports:
+      - 3567:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - postgres-network
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U exercise_admin -d exercise"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    name: exercise_postgres_data
+
+networks:
+  postgres-network:
+    driver: bridge
