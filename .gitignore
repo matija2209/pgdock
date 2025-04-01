@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Docker volumes
+postgres_data/
+
+# Backup files
+*.sql
+backup_*.sql
+
+# Generated files
+init-scripts/init.sql
+
+# OS files
+.DS_Store
+Thumbs.db 

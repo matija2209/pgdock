@@ -1,13 +1,13 @@
 services:
-  exercise-db:
+  as-spa-db:
     image: postgres:17
-    container_name: exercise-db
+    container_name: as-spa-db
     environment:
-      POSTGRES_USER: exercise_admin
-      POSTGRES_PASSWORD: Ex3rc1seP@ss
-      POSTGRES_DB: exercise
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - 3567:5432
+      - ${DB_PORT}:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
@@ -15,15 +15,22 @@ services:
       - postgres-network
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U exercise_admin -d exercise"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
 volumes:
   postgres_data:
-    name: exercise_postgres_data
+    name: as_spa_postgres_data
 
 networks:
   postgres-network:
     driver: bridge
+
+# Add a script to generate init.sql before starting the container
+x-generate-init: &generate-init
+  command: ./generate-init.sh
+  volumes:
+    - .:/app
+  working_dir: /app
