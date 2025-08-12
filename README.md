@@ -1,4 +1,4 @@
-# pgdock - PostgreSQL Docker Instance Manager
+# PgDock - PostgreSQL Docker Instance Manager
 
 [![PyPI version](https://badge.fury.io/py/pgdock.svg)](https://badge.fury.io/py/pgdock)
 [![Test](https://github.com/matija2209/pgdock/actions/workflows/test.yml/badge.svg)](https://github.com/matija2209/pgdock/actions/workflows/test.yml)
