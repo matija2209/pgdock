@@ -1,0 +1,38 @@
+name: Simple Publish Test
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install build
+      run: |
+        python -m pip install --upgrade pip
+        pip install build
+        
+    - name: Build package
+      run: python -m build
+      
+    - name: List dist files
+      run: ls -la dist/
+      
+    - name: Test publish (dry run)
+      run: |
+        echo "Would publish these files to PyPI:"
+        ls -la dist/
+        echo "GitHub ref: ${{ github.ref }}"
+        echo "Is tag: ${{ startsWith(github.ref, 'refs/tags/') }}"
