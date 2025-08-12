@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pgdock"
+version = "1.0.0"
+authors = [
+    {name = "Matija", email = "your-email@example.com"},
+]
+description = "PostgreSQL Docker Instance Manager CLI. Create, manage, and backup PostgreSQL instances with automatic credential generation, health monitoring, and cross-platform support."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers", 
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Database",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Environment :: Console",
+]
+keywords = ["postgresql", "docker", "cli", "database", "postgres", "docker-compose", "backup", "instance-manager"]
+dependencies = [
+    "typer>=0.12.0",
+    "pyyaml>=6.0",
+    "jinja2>=3.1.0", 
+    "rich>=13.0.0",
+    "click>=8.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/matija2209/pgdock"
+Repository = "https://github.com/matija2209/pgdock"
+Issues = "https://github.com/matija2209/pgdock/issues"
+Documentation = "https://github.com/matija2209/pgdock#readme"
+
+[project.scripts]
+pgdock = "pgdock.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pgdock*"]
+
+[tool.setuptools.package-data]
+"*" = ["templates/*.j2"]

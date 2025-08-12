@@ -1,5 +1,9 @@
 # pgdock - PostgreSQL Docker Instance Manager
 
+[![PyPI version](https://badge.fury.io/py/pgdock.svg)](https://badge.fury.io/py/pgdock)
+[![Test](https://github.com/matija2209/pgdock/actions/workflows/test.yml/badge.svg)](https://github.com/matija2209/pgdock/actions/workflows/test.yml)
+[![Publish to PyPI](https://github.com/matija2209/pgdock/actions/workflows/publish.yml/badge.svg)](https://github.com/matija2209/pgdock/actions/workflows/publish.yml)
+
 A CLI tool for managing PostgreSQL Docker instances with automatic credential generation, health checking, and backup capabilities.
 
 ## Features
