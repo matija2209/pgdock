@@ -240,13 +240,77 @@ pgdock backup mydb /path/to/backups --json
 
 ## Troubleshooting
 
-### Docker Permission Issues (Linux)
+### Command Not Found (WSL/Linux)
 
-If you get permission errors:
+If `pgdock` command is not found after installation:
 
 ```bash
+# Check if ~/.local/bin is in your PATH
+echo $PATH | grep -q "$HOME/.local/bin" && echo "✓ In PATH" || echo "✗ Not in PATH"
+
+# Add to PATH temporarily
+export PATH="$HOME/.local/bin:$PATH"
+
+# Make it permanent
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc  # bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc   # zsh
+
+# Reload shell
+source ~/.bashrc  # or source ~/.zshrc
+```
+
+### Docker Permission Issues (Linux)
+
+If you get "Docker daemon not running or not accessible" error on Linux:
+
+```bash
+# Add your user to the docker group
 sudo usermod -aG docker $USER
+
+# Apply the group change (requires re-login or newgrp)
 newgrp docker
+
+# Verify Docker access
+docker info
+
+# Now pgdock should work
+pgdock create --name test
+```
+
+**Note**: You may need to log out and back in for group changes to take effect.
+
+### Docker Compose Version Issues
+
+pgdock requires Docker Compose v2. If you get compose-related errors:
+
+```bash
+# Check your Docker Compose version
+docker compose version
+
+# If you only have legacy docker-compose, upgrade Docker Desktop or install Compose v2:
+# For Ubuntu/Debian:
+sudo apt-get update
+sudo apt-get install docker-compose-plugin
+
+# For other systems, follow: https://docs.docker.com/compose/install/
+```
+
+pgdock supports both `docker compose` (v2, recommended) and `docker-compose` (legacy, with warning).
+
+### WSL Networking
+
+If you need to access pgdock instances from outside WSL:
+
+```powershell
+# In Windows PowerShell (as Administrator)
+# Replace 172.27.16.146 with your WSL IP (get it with: wsl hostname -I)
+netsh interface portproxy add v4tov4 listenport=5400 listenaddress=0.0.0.0 connectport=5400 connectaddress=172.27.16.146
+
+# List current port forwards
+netsh interface portproxy show v4tov4
+
+# Remove port forward when no longer needed
+netsh interface portproxy delete v4tov4 listenport=5400 listenaddress=0.0.0.0
 ```
 
 ### Port Conflicts
