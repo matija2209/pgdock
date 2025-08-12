@@ -364,6 +364,84 @@ If you're migrating from a manual Docker Compose setup to pgdock:
    psql "$(pgdock creds mydb --json | jq -r .connectionString)" < backup.sql
    ```
 
+## Testing Your Instance
+
+After creating a pgdock instance, verify it's working correctly:
+
+### Quick Connection Test
+
+```bash
+# Get connection details
+pgdock creds mydb
+
+# Test connection with psql (remove ?schema=public if you get URI errors)
+psql "postgresql://user:password@localhost:port/database" -c "SELECT version();"
+
+# Or use the JSON output to get connection string
+CONNECTION_STRING=$(pgdock creds mydb --json | jq -r .connectionString | sed 's/?schema=public//')
+psql "$CONNECTION_STRING" -c "SELECT version();"
+```
+
+### Comprehensive Instance Test
+
+```bash
+# 1. Check instance status
+pgdock status mydb
+
+# 2. Test database connection
+pgdock creds mydb --json | jq -r .connectionString | sed 's/?schema=public//' | xargs -I {} psql {} -c "SELECT current_database(), current_user, version();"
+
+# 3. Create a test table and insert data
+CONNECTION_STRING=$(pgdock creds mydb --json | jq -r .connectionString | sed 's/?schema=public//')
+psql "$CONNECTION_STRING" << EOF
+CREATE TABLE test_table (id SERIAL PRIMARY KEY, name TEXT, created_at TIMESTAMP DEFAULT NOW());
+INSERT INTO test_table (name) VALUES ('pgdock test'), ('connection verified');
+SELECT * FROM test_table;
+DROP TABLE test_table;
+EOF
+
+# 4. Test backup functionality
+mkdir -p ./test-backups
+pgdock backup mydb ./test-backups --format sql
+ls -la ./test-backups/
+
+# 5. Check container logs
+pgdock logs mydb --lines 20
+```
+
+### External Access Testing
+
+If you need external access (VPS, cloud instance):
+
+```bash
+# Test from another machine (replace with your server IP)
+psql "postgresql://user:password@YOUR_SERVER_IP:5400/database" -c "SELECT version();"
+
+# Example with actual values:
+psql "postgresql://u_56ocdyl4:TbCnRR9UiI0SBROW7O1C@23.88.102.236:5400/pg_smart_wolf" -c "SELECT version();"
+```
+
+**Expected Output:**
+```
+                                   version                                    
+-----------------------------------------------------------------------------
+PostgreSQL 17.5 (Debian 17.5-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+(1 row)
+```
+
+### Testing Network Connectivity
+
+```bash
+# Test port connectivity
+telnet localhost 5400  # or your server IP
+
+# Check if port is open
+nmap -p 5400 localhost  # or your server IP
+
+# For Docker containers, check port mapping
+docker port pgdock-mydb
+```
+
 ## Examples
 
 ### Development Workflow
