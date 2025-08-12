@@ -1,0 +1,23 @@
+name: Debug Workflow
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Debug info
+      run: |
+        echo "Event name: ${{ github.event_name }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "Ref name: ${{ github.ref_name }}"
+        echo "Ref type: ${{ github.ref_type }}"
+        echo "Repository: ${{ github.repository }}"
+        
+    - name: List workflows
+      run: |
+        echo "Checking if publish.yml exists..."
+        ls -la .github/workflows/ || echo "No workflows directory"
