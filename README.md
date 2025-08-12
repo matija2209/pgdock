@@ -22,8 +22,8 @@ pip install pgdock
 ### Development Installation
 
 ```bash
-git clone https://github.com/matija2209/postgres-docker-db
-cd postgres-docker-db
+git clone https://github.com/matija2209/pgdock.git
+cd pgdock
 pip install -e .
 ```
 
