@@ -27,6 +27,22 @@ cd postgres-docker-db
 pip install -e .
 ```
 
+#### WSL/Linux PATH Setup
+
+If `pgdock` command is not found after installation, add the user bin directory to your PATH:
+
+```bash
+# Add to PATH temporarily
+export PATH="$HOME/.local/bin:$PATH"
+
+# Make it permanent (choose your shell)
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc  # for bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc   # for zsh
+
+# Reload your shell configuration
+source ~/.bashrc  # or source ~/.zshrc
+```
+
 ### Requirements
 
 - Python 3.10+
